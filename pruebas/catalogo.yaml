@@ -1,0 +1,365 @@
+# Catálogo de pruebas
+#
+# Selección demostrativa. Muestra cómo cada nivel del marco se traduce en
+# comprobaciones concretas sobre el sistema implantado.
+#
+# NO ES EL CATÁLOGO COMPLETO. Se publican las pruebas necesarias para que el
+# método se entienda y pueda ser contrastado por un tercero.
+#
+# Esquema y criterios de aplicabilidad: ver docs/banco-de-pruebas.md
+
+version: "0.1"
+fecha: "2026-08-28"
+autor: "Control Digital Pymes"
+naturaleza: "seleccion-demostrativa"
+
+areas:
+  - id: prueba-identidad
+    nombre: "A1 · Prueba de identidad"
+  - id: gestion-medio
+    nombre: "A2 · Gestión del medio de identificación"
+  - id: autenticacion
+    nombre: "A3 · Autenticación"
+  - id: trazabilidad
+    nombre: "A4 · Trazabilidad y minimización"
+  - id: via-alternativa
+    nombre: "A5 · Continuidad del nivel en vía alternativa"
+
+pruebas:
+
+  # ---------------------------------------------------------------- A1
+  - id: P-A1-01
+    area: prueba-identidad
+    nivel_minimo: bajo
+    tipo: positiva
+    titulo: "Documento admitido y en vigor"
+    criterio: >
+      En todos los niveles debe recogerse la documentación pertinente para la
+      prueba de identidad y aceptarse la que corresponde al trámite.
+    procedimiento: >
+      Presentar un documento del tipo admitido para el trámite, en vigor y sin
+      alteraciones, correspondiente a la identidad declarada.
+    resultado_esperado: >
+      El sistema acepta el documento y permite continuar el trámite.
+    evidencia: >
+      Captura del resultado y registro generado por el sistema.
+
+  - id: P-A1-02
+    area: prueba-identidad
+    nivel_minimo: sustancial
+    tipo: negativa
+    titulo: "Documento caducado"
+    criterio: >
+      A partir del nivel sustancial la documentación debe verificarse, y ello
+      incluye medidas frente a documentación caducada, revocada o suspendida.
+    procedimiento: >
+      Presentar un documento del tipo admitido cuya fecha de validez haya
+      expirado.
+    resultado_esperado: >
+      El sistema rechaza el documento y registra el motivo del rechazo.
+      No debe permitir continuar el trámite.
+    evidencia: >
+      Captura del rechazo y entrada del registro con el motivo.
+
+  - id: P-A1-03
+    area: prueba-identidad
+    nivel_minimo: sustancial
+    tipo: negativa
+    titulo: "Documento de tipo no admitido para el trámite"
+    criterio: >
+      El nivel exigido por el trámite determina qué documentación es aceptable.
+      Un documento válido para un trámite de nivel inferior no debe servir para
+      uno de nivel superior.
+    procedimiento: >
+      Presentar un documento cuyo tipo solo sea admisible en trámites de nivel
+      inferior al del trámite bajo prueba.
+    resultado_esperado: >
+      El sistema rechaza el documento indicando que no alcanza el nivel exigido
+      por ese trámite.
+    evidencia: >
+      Captura del rechazo y del mensaje mostrado al usuario.
+
+  - id: P-A1-04
+    area: prueba-identidad
+    nivel_minimo: alto
+    tipo: negativa
+    titulo: "Mismo documento asociado a dos identidades distintas"
+    criterio: >
+      En nivel alto debe verificarse que la persona que presenta la
+      documentación es su titular, lo que excluye que un mismo documento
+      sustente identidades diferentes.
+    procedimiento: >
+      Completar un alta con un documento determinado. Intentar después un alta
+      distinta con el mismo documento y datos de identidad diferentes.
+    resultado_esperado: >
+      El sistema detecta la coincidencia y rechaza la segunda alta.
+    evidencia: >
+      Captura de ambos intentos y registro de la detección.
+
+  - id: P-A1-05
+    area: prueba-identidad
+    nivel_minimo: alto
+    tipo: negativa
+    titulo: "Documento válido presentado por persona distinta del titular"
+    criterio: >
+      El nivel alto exige contrastar que quien presenta la documentación es la
+      persona a la que corresponde, no solo que el documento sea auténtico.
+    procedimiento: >
+      Presentar un documento auténtico y en vigor acompañado de datos
+      biométricos o de una imagen que no corresponden a su titular.
+    resultado_esperado: >
+      El sistema rechaza la operación por discrepancia entre el portador y el
+      titular del documento.
+    evidencia: >
+      Captura del rechazo y registro del motivo.
+
+  - id: P-A1-06
+    area: prueba-identidad
+    nivel_minimo: alto
+    tipo: negativa
+    titulo: "Poder de representación caducado o revocado"
+    requiere: representacion
+    criterio: >
+      Cuando el trámite exige actuar en nombre de otro, el vínculo entre la
+      persona física y la entidad representada debe estar verificado con la
+      misma exigencia que el propio nivel.
+    procedimiento: >
+      Acreditar la identidad correctamente y presentar un poder de
+      representación cuya vigencia haya expirado o que conste revocado.
+    resultado_esperado: >
+      El sistema acepta la identidad pero rechaza la actuación en
+      representación, indicando el motivo.
+    evidencia: >
+      Captura del rechazo y registro que distinga el fallo de representación del
+      fallo de identidad.
+
+  # ---------------------------------------------------------------- A2
+  - id: P-A2-01
+    area: gestion-medio
+    nivel_minimo: sustancial
+    tipo: negativa
+    titulo: "Credencial de un solo factor en trámite de nivel sustancial"
+    criterio: >
+      A partir del nivel sustancial el medio de identificación debe emplear al
+      menos dos factores de autenticación de categorías distintas.
+    procedimiento: >
+      Intentar completar el trámite empleando únicamente un factor de
+      autenticación.
+    resultado_esperado: >
+      El sistema no permite completar el trámite y requiere el segundo factor.
+    evidencia: >
+      Captura del punto en que se interrumpe el proceso.
+
+  - id: P-A2-02
+    area: gestion-medio
+    nivel_minimo: bajo
+    tipo: negativa
+    titulo: "Credencial revocada"
+    criterio: >
+      En todos los niveles debe ser posible revocar un medio de identificación
+      de forma rápida y eficaz, y la revocación debe surtir efecto.
+    procedimiento: >
+      Revocar una credencial e intentar inmediatamente después completar un
+      trámite con ella.
+    resultado_esperado: >
+      El sistema deniega el acceso. La denegación se produce dentro del plazo
+      de efectividad declarado por el prestador.
+    evidencia: >
+      Marca temporal de la revocación, marca temporal del intento y captura de
+      la denegación.
+
+  - id: P-A2-03
+    area: gestion-medio
+    nivel_minimo: alto
+    tipo: negativa
+    titulo: "Renovación sin verificación contra fuente autorizada"
+    criterio: >
+      En nivel alto, cuando la renovación se apoya en un medio existente, los
+      datos de identidad deben verificarse de nuevo contra una fuente
+      autorizada.
+    procedimiento: >
+      Solicitar la renovación de una credencial cuyos datos de identidad hayan
+      dejado de corresponder con los que constan en la fuente autorizada.
+    resultado_esperado: >
+      El sistema detecta la discrepancia y no completa la renovación de forma
+      automática.
+    evidencia: >
+      Captura del resultado y registro de la comprobación efectuada.
+
+  # ---------------------------------------------------------------- A3
+  - id: P-A3-01
+    area: autenticacion
+    nivel_minimo: sustancial
+    tipo: negativa
+    titulo: "Reutilización de datos de una sesión anterior"
+    criterio: >
+      A partir del nivel sustancial la verificación debe realizarse mediante
+      autenticación dinámica, de modo que capturar una sesión no permita
+      repetirla después.
+    procedimiento: >
+      Capturar los datos de una autenticación completada correctamente e
+      intentar una nueva autenticación reproduciéndolos.
+    resultado_esperado: >
+      El sistema deniega la segunda autenticación.
+    evidencia: >
+      Registro de ambos intentos y captura de la denegación.
+
+  - id: P-A3-02
+    area: autenticacion
+    nivel_minimo: bajo
+    tipo: negativa
+    titulo: "Intentos repetidos de autenticación"
+    criterio: >
+      En todos los niveles el mecanismo debe incorporar controles que hagan
+      altamente improbable que la adivinación repetida permita superar la
+      autenticación.
+    procedimiento: >
+      Realizar intentos sucesivos de autenticación con credenciales incorrectas
+      sobre una misma identidad.
+    resultado_esperado: >
+      El sistema limita, retarda o bloquea los intentos, y registra el hecho.
+    evidencia: >
+      Registro de los intentos y captura del momento en que se aplica la
+      limitación.
+
+  - id: P-A3-03
+    area: autenticacion
+    nivel_minimo: sustancial
+    tipo: traza
+    titulo: "Protección de los datos de identidad almacenados"
+    criterio: >
+      Cuando los datos de identificación de la persona se almacenan como parte
+      del mecanismo de autenticación, deben protegerse frente a pérdida y
+      compromiso, incluido el análisis fuera de línea.
+    procedimiento: >
+      Solicitar al prestador la documentación de cómo se almacenan y protegen
+      esos datos, y comprobar que las medidas declaradas están efectivamente
+      aplicadas en la instalación evaluada.
+    resultado_esperado: >
+      Existe documentación de las medidas y se comprueba su aplicación efectiva.
+      La ausencia de documentación es en sí misma un resultado negativo.
+    evidencia: >
+      Documentación aportada y comprobación realizada, con su fecha.
+
+  # ---------------------------------------------------------------- A4
+  - id: P-A4-01
+    area: trazabilidad
+    nivel_minimo: bajo
+    tipo: traza
+    titulo: "Registro de la verificación efectuada"
+    criterio: >
+      Debe conservarse registro de la información relevante durante el tiempo
+      necesario, de modo que pueda acreditarse después qué se comprobó.
+    procedimiento: >
+      Completar un trámite y examinar el registro generado.
+    resultado_esperado: >
+      Consta qué se verificó, cuándo, con qué resultado y con qué nivel se
+      resolvió el trámite.
+    evidencia: >
+      Entrada de registro correspondiente a la operación.
+
+  - id: P-A4-02
+    area: trazabilidad
+    nivel_minimo: sustancial
+    tipo: traza
+    titulo: "No conservación del documento más allá del plazo declarado"
+    criterio: >
+      La información debe destruirse cuando deja de ser necesaria para la
+      finalidad que justificó su recogida.
+    procedimiento: >
+      Completar un trámite que requiera presentar documentación. Transcurrido el
+      plazo de conservación declarado, comprobar si la imagen o copia del
+      documento sigue accesible en el sistema.
+    resultado_esperado: >
+      La documentación ya no está accesible. Si permanece, debe existir una
+      justificación documentada de la ampliación del plazo.
+    evidencia: >
+      Plazo declarado, fecha de la comprobación y resultado.
+
+  - id: P-A4-03
+    area: trazabilidad
+    nivel_minimo: bajo
+    tipo: traza
+    titulo: "No recogida de datos identificativos en trámites de solo atributo"
+    criterio: >
+      Los datos recogidos deben limitarse a los necesarios para la finalidad del
+      trámite. Un trámite que solo requiere acreditar un atributo no necesita
+      datos identificativos.
+    procedimiento: >
+      Completar un trámite que según el marco solo requiere acreditar un
+      atributo, y examinar qué datos ha almacenado el sistema.
+    resultado_esperado: >
+      No constan datos identificativos de la persona más allá de lo necesario
+      para acreditar el atributo.
+    evidencia: >
+      Relación de campos almacenados, contrastada con lo que el marco declara
+      necesario para ese trámite.
+
+  - id: P-A4-04
+    area: trazabilidad
+    nivel_minimo: sustancial
+    tipo: traza
+    titulo: "Contenido de los registros de auditoría"
+    criterio: >
+      Los registros deben permitir acreditar lo ocurrido sin incorporar datos
+      personales innecesarios para esa finalidad.
+    procedimiento: >
+      Examinar una muestra de registros de auditoría generados por operaciones
+      de distinto nivel.
+    resultado_esperado: >
+      Los registros permiten reconstruir qué ocurrió y no contienen datos
+      personales ajenos a esa finalidad.
+    evidencia: >
+      Muestra examinada, con los datos personales sustituidos, y su análisis.
+
+  # ---------------------------------------------------------------- A5
+  - id: P-A5-01
+    area: via-alternativa
+    nivel_minimo: bajo
+    tipo: traza
+    titulo: "Existencia de procedimiento escrito para la vía alternativa"
+    criterio: >
+      Un trámite cuya vía alternativa no está determinada es un trámite cuyo
+      nivel real se desconoce, porque el declarado solo se sostiene mientras
+      funcione el canal principal.
+    procedimiento: >
+      Solicitar el procedimiento documentado que se aplica cuando el trámite se
+      resuelve por teléfono, correo o presencialmente.
+    resultado_esperado: >
+      Existe procedimiento escrito que indica qué debe comprobarse en esa vía.
+      Su ausencia es un resultado negativo y debe constar como tal.
+    evidencia: >
+      Procedimiento aportado, o constancia de que no existe.
+
+  - id: P-A5-02
+    area: via-alternativa
+    nivel_minimo: sustancial
+    tipo: negativa
+    titulo: "Resolución por vía alternativa de un trámite cuyo nivel no puede sostener"
+    criterio: >
+      La vía alternativa no debe permitir completar un trámite cuando no puede
+      alcanzar el nivel de garantía que ese trámite exige.
+    procedimiento: >
+      Solicitar por la vía alternativa la resolución de un trámite clasificado
+      en un nivel que esa vía no puede acreditar.
+    resultado_esperado: >
+      La solicitud no se completa por esa vía, o se completa aplicando un
+      procedimiento compensatorio documentado que alcanza el nivel exigido.
+    evidencia: >
+      Registro de la solicitud, respuesta obtenida y procedimiento aplicado.
+
+  - id: P-A5-03
+    area: via-alternativa
+    nivel_minimo: sustancial
+    tipo: traza
+    titulo: "Constancia de las gestiones resueltas por vía alternativa"
+    criterio: >
+      Las gestiones resueltas fuera del canal principal deben dejar constancia
+      equivalente, o el sistema tendrá un vacío de trazabilidad no declarado.
+    procedimiento: >
+      Resolver una gestión por vía alternativa y comprobar si queda registrada
+      en el mismo sistema que las del canal principal.
+    resultado_esperado: >
+      Consta la gestión, la vía por la que se resolvió y qué se comprobó.
+    evidencia: >
+      Entrada de registro correspondiente, o constancia de su ausencia.

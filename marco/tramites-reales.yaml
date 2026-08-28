@@ -1,0 +1,325 @@
+# Marco de garantía de identidad por trámite
+# Trámites reales de la Agencia Pública de Puertos de Andalucía.
+#
+# ORIGEN DE LOS DATOS
+#   Los trámites y los canales proceden de información publicada por la propia
+#   Agencia: su oficina virtual, su web institucional y la Ventanilla
+#   Electrónica de la Administración de la Junta de Andalucía. Consultado en
+#   agosto de 2026.
+#
+# NATURALEZA DE LA CLASIFICACIÓN
+#   Los trámites son reales. La clasificación es propia y NO ha sido validada
+#   por la Agencia. Se presenta como propuesta de trabajo, no como diagnóstico.
+#
+# Criterios: ver docs/criterios.md
+
+version: "0.2"
+fecha: "2026-08-20"
+autor: "Control Digital Pymes"
+naturaleza: "tramites-reales-clasificacion-propia-no-validada"
+
+canales:
+  - id: OV
+    nombre: "Oficina Virtual de los Puertos de Andalucía"
+    descripcion: >
+      Canal propio de la Agencia para servicios operativos. Dispone de alta de
+      cliente propia.
+    identificacion: "PENDIENTE DE VERIFICAR"
+  - id: VEA
+    nombre: "Ventanilla Electrónica de la Administración de la Junta de Andalucía"
+    descripcion: >
+      Canal general de la Junta para solicitudes, trámites de procedimiento y
+      presentación de documentos dirigidos a la Agencia.
+    identificacion: >
+      Certificado digital, certificado de representante o sistema Cl@ve.
+
+tramites:
+
+  - id: T-01
+    nombre: "Consulta de tasas portuarias y cálculo de estancia en tránsito"
+    canal: OV
+    descripcion: >
+      Consulta pública del régimen de tasas y herramienta de cálculo orientativo
+      del importe de una estancia en tránsito.
+    ejes:
+      impacto: 1
+      reversibilidad: 1
+      alcance: 1
+      detectabilidad: 1
+    nivel: bajo
+    acreditar:
+      identificacion: false
+      atributo: false
+      representacion: false
+    consecuencia_practica: >
+      Un solo factor de autenticación, o ninguno. No requiere verificar
+      documentación.
+    via_alternativa: no-determinada
+    notas: >
+      Información pública. Ningún eje eleva. Exigir identificación aquí sería
+      una barrera sin contrapartida de riesgo.
+
+  - id: T-02
+    nombre: "Reserva de plaza en área de autocaravanas"
+    canal: OV
+    descripcion: >
+      Reserva de estacionamiento en las áreas de autocaravanas de la red
+      portuaria.
+    ejes:
+      impacto: 2
+      reversibilidad: 1
+      alcance: 2
+      detectabilidad: 1
+    nivel: bajo
+    acreditar:
+      identificacion: true
+      atributo: false
+      representacion: false
+    consecuencia_practica: >
+      Un solo factor de autenticación. No requiere verificar documentación.
+    via_alternativa: no-determinada
+    notas: >
+      Recurso rotatorio y de bajo valor unitario. Una reserva indebida se
+      detecta a la llegada y se resuelve en el momento.
+
+  - id: T-03
+    nombre: "Consulta de expediente propio y pagos"
+    canal: OV
+    descripcion: >
+      Acceso al estado de contratos, liquidaciones y pagos asociados a un
+      cliente.
+    ejes:
+      impacto: 2
+      reversibilidad: 1
+      alcance: 1
+      detectabilidad: 3
+    nivel: sustancial
+    acreditar:
+      identificacion: true
+      atributo: false
+      representacion: false
+    consecuencia_practica: >
+      Dos factores de categorías distintas, autenticación dinámica y
+      verificación de la documentación contra fuente autorizada.
+    via_alternativa: no-determinada
+    notas: >
+      Eleva por detectabilidad con impacto igual o superior a 2. El acceso
+      indebido a un expediente ajeno no genera reclamación y podría no
+      detectarse nunca.
+
+  - id: T-04
+    nombre: "Registro de solicitud de empleo"
+    canal: OV
+    descripcion: >
+      Presentación de candidatura a los procesos de selección de personal de la
+      Agencia.
+    ejes:
+      impacto: 2
+      reversibilidad: 2
+      alcance: 2
+      detectabilidad: 3
+    nivel: sustancial
+    acreditar:
+      identificacion: true
+      atributo: false
+      representacion: false
+    consecuencia_practica: >
+      Dos factores de categorías distintas, autenticación dinámica y
+      verificación de la documentación contra fuente autorizada.
+    via_alternativa: no-determinada
+    notas: >
+      Eleva por detectabilidad. Implica el tratamiento de datos curriculares de
+      terceros y una suplantación podría no advertirse hasta muy tarde.
+
+  - id: T-05
+    nombre: "Reserva de atraque en tránsito"
+    canal: OV
+    descripcion: >
+      Reserva de puesto de atraque por estancia temporal en puertos deportivos
+      de gestión directa, con devengo de tasa.
+    ejes:
+      impacto: 3
+      reversibilidad: 2
+      alcance: 2
+      detectabilidad: 1
+    nivel: sustancial
+    acreditar:
+      identificacion: true
+      atributo: true
+      representacion: false
+    consecuencia_practica: >
+      Dos factores de categorías distintas, autenticación dinámica y
+      verificación de la documentación contra fuente autorizada.
+    via_alternativa: no-determinada
+    notas: >
+      Atributo a acreditar: titularidad o gobierno de la embarcación, y sus
+      dimensiones, de las que depende la tasa. Detectabilidad inmediata: la
+      embarcación llega o no llega.
+
+  - id: T-06
+    nombre: "Inscripción y mantenimiento en lista de espera de atraque de base"
+    canal: OV
+    descripcion: >
+      Alta y conservación de la posición en la lista de espera para la
+      contratación de un atraque de base ordinario, regulada por normas propias
+      de la Agencia.
+    ejes:
+      impacto: 3
+      reversibilidad: 3
+      alcance: 3
+      detectabilidad: 3
+    nivel: alto
+    acreditar:
+      identificacion: true
+      atributo: true
+      representacion: false
+    consecuencia_practica: >
+      Además de lo anterior, contraste de que quien presenta la documentación es
+      su titular, protección de la credencial frente a duplicación y auditoría
+      independiente del sistema.
+    via_alternativa: no-determinada
+    notas: >
+      TRÁMITE CRÍTICO DEL CONJUNTO. Concurren tres condiciones de elevación.
+      La posición en lista tiene valor económico directo: la antigüedad da
+      derecho a bonificaciones sobre la tasa. Una inscripción o una
+      manipulación de antigüedad indebidas desplazan a un tercero
+      identificable, no se detectan salvo reclamación, y revertirlas exige
+      procedimiento formal.
+
+  - id: T-07
+    nombre: "Contratación de atraque de base ordinario"
+    canal: VEA
+    descripcion: >
+      Formalización del contrato anual de atraque, con las bonificaciones
+      asociadas a la condición de usuario con contrato.
+    ejes:
+      impacto: 3
+      reversibilidad: 3
+      alcance: 3
+      detectabilidad: 2
+    nivel: alto
+    acreditar:
+      identificacion: true
+      atributo: true
+      representacion: false
+    consecuencia_practica: >
+      Además de lo anterior, contraste de que quien presenta la documentación es
+      su titular, protección de la credencial frente a duplicación y auditoría
+      independiente del sistema.
+    via_alternativa: no-determinada
+    notas: >
+      Recurso escaso: una plaza asignada indebidamente priva de ella a quien
+      esperaba. Eleva por reversibilidad y alcance.
+
+  - id: T-08
+    nombre: "Presentación general de documentos y solicitudes"
+    canal: VEA
+    descripcion: >
+      Presentación de escritos, solicitudes y documentación dirigidos a la
+      Agencia por el canal general de la Junta.
+    ejes:
+      impacto: 3
+      reversibilidad: 3
+      alcance: 2
+      detectabilidad: 2
+    nivel: alto
+    acreditar:
+      identificacion: true
+      atributo: false
+      representacion: false
+    consecuencia_practica: >
+      Además de lo anterior, contraste de que quien presenta la documentación es
+      su titular, protección de la credencial frente a duplicación y auditoría
+      independiente del sistema.
+    via_alternativa: no-determinada
+    notas: >
+      Genera obligaciones jurídicas e inicia o altera procedimientos. Eleva por
+      reversibilidad: deshacer un acto administrativo exige vía formal.
+
+  - id: T-09
+    nombre: "Presentación en representación de persona jurídica"
+    canal: VEA
+    descripcion: >
+      Actuación ante la Agencia por parte de persona apoderada o autorizada por
+      una entidad.
+    ejes:
+      impacto: 3
+      reversibilidad: 3
+      alcance: 3
+      detectabilidad: 3
+    nivel: alto
+    acreditar:
+      identificacion: true
+      atributo: false
+      representacion: true
+    consecuencia_practica: >
+      Además de lo anterior, contraste de titularidad, protección de la
+      credencial y verificación del vínculo entre la persona física y la entidad
+      representada.
+    via_alternativa: no-determinada
+    notas: >
+      El punto crítico no es identificar a la persona sino acreditar el alcance
+      vigente de su poder de representación. La norma europea exige que la
+      vinculación entre identidad física y jurídica esté verificada con la misma
+      exigencia que el propio nivel.
+
+  - id: T-10
+    nombre: "Solicitud de concesión o autorización de ocupación de dominio público"
+    canal: VEA
+    descripcion: >
+      Título administrativo para ocupar suelo o lámina de agua portuaria con
+      actividad económica.
+    ejes:
+      impacto: 4
+      reversibilidad: 4
+      alcance: 3
+      detectabilidad: 3
+    nivel: alto
+    acreditar:
+      identificacion: true
+      atributo: false
+      representacion: true
+    consecuencia_practica: >
+      Además de lo anterior, contraste de titularidad, protección de la
+      credencial y verificación del vínculo de representación.
+    via_alternativa: no-determinada
+    notas: >
+      Máxima exigencia del conjunto. Dispone sobre derechos de ocupación del
+      dominio público con efectos de larga duración. Nivel alto por impacto sin
+      necesidad de elevación; concurren además tres condiciones.
+
+# ------------------------------------------------------------------------------
+# OBSERVACIÓN DE CONJUNTO
+#
+# Al clasificar los diez trámites aparece una carencia que afecta a todos por
+# igual: NINGUNO TIENE DETERMINADA SU VÍA ALTERNATIVA.
+#
+# El nivel asignado a cada trámite describe lo que exige su canal electrónico.
+# Pero ningún trámite declara qué ocurre cuando ese canal no está disponible y
+# la gestión se resuelve por teléfono, por correo o presencialmente. En esas
+# vías no consta criterio alguno sobre qué debe comprobarse.
+#
+# CLASIFICACIÓN FÁCTICA:
+#
+#   HECHO PROBADO
+#     Existen dos canales electrónicos diferenciados. El canal general de la
+#     Junta exige certificado digital, certificado de representante o Cl@ve.
+#     Existen además vías de atención no electrónicas.
+#
+#   INFERENCIA RAZONABLE
+#     El nivel de garantía declarado para un trámite solo se sostiene mientras
+#     se use el canal para el que fue pensado. Por vía alternativa, el nivel
+#     efectivo depende del criterio de quien atiende, que no está escrito.
+#
+#   NO SOSTENIBLE SIN VERIFICAR
+#     Qué identificación exige exactamente el alta de cliente del canal propio.
+#     No ha podido determinarse desde fuentes públicas. Por tanto NO se afirma
+#     que exista asimetría entre canales: solo que el criterio de reparto entre
+#     ellos no parece ser el nivel de garantía.
+#
+# CONSECUENCIA PARA EL MARCO
+#   Se incorpora una tercera dimensión por trámite, además del nivel y de qué
+#   hay que acreditar: la vía alternativa y si mantiene el nivel declarado.
+#   En los diez trámites figura como no determinada, y esa constancia es en sí
+#   misma el hallazgo.
+# ------------------------------------------------------------------------------
